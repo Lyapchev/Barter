@@ -1,8 +1,14 @@
-from django.urls import path
-from rest_framework.authtoken.views import obtain_auth_token
+from django.urls import path, include
 from . import views
+from rest_framework.routers import DefaultRouter
+from .views import SkillView
+
+router = DefaultRouter()
+router.register(r'skills', SkillView)
+
 
 
 urlpatterns = [
-    path("register/", views.user_register_view, name="register"),
+    path('', include(router.urls)),
+    path('account/register', views.UserCreate.as_view())
 ]
