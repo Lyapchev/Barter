@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
+from django.dispatch import receiver
 from rest_framework import serializers
-from .models import Skill
+from .models import Profile, Skill
+from django.db.models.signals import post_save
 
 class UserSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
@@ -22,8 +24,19 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
     
+    @receiver(post_save, sender=User)
+    def create_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
+
 class SkillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skill
         fields = ('id', 'name')
-        
+
+class ProfileSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Profile
+        fields = ['user', 'bio', 'location', 'birth_date']
+        read_only_fields = ['user']
