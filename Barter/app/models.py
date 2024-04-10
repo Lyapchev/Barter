@@ -6,7 +6,7 @@ class Skill(models.Model):
     name = models.CharField(max_length=100)
     
     def __str__(self):
-        return self.title
+        return self.name
 
     
 class Profile(models.Model):
@@ -14,5 +14,6 @@ class Profile(models.Model):
     bio = models.TextField(blank=True)
     location = models.CharField(max_length=100, blank=True)
     birth_date = models.DateField(null=True, blank=True)
+    skills = models.OneToOneField(Skill, null=True, blank=True, on_delete=models.CASCADE)
     def __str__(self):
         return self.user.username
