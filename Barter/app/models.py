@@ -20,9 +20,6 @@ class Profile(models.Model):
         return self.user.username
     
 class Review(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     review_user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='reviews')
     text = models.TextField()
-    
-
-    
-    
