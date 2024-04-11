@@ -7,6 +7,7 @@ router.register(r'skills', SkillView)
 router.register(r'profiles', ProfileDetailView)
 router.register(r'reviews', ReviewView)
 
+
 urlpatterns = [
     path('', include(router.urls)),
 ]

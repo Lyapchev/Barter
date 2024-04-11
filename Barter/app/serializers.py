@@ -3,6 +3,9 @@ from django.dispatch import receiver
 from rest_framework import serializers
 from .models import Profile, Review,  Skill
 from django.db.models.signals import post_save
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.settings import api_settings
 
 class UserSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
@@ -38,7 +41,7 @@ class UserNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username']
-        
+    
 class SkillNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skill
@@ -59,6 +62,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     user = UserNameSerializer(read_only=True)
     #skills = SkillNameSerializer(many=True, read_only=True)
     reviews = ReviewTextSerializer(many=True, read_only=True)
+    
 
     class Meta:
         model = Profile
