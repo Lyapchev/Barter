@@ -41,5 +41,3 @@ class ProfileDetailView(mixins.UpdateModelMixin,
     filterset_fields = ['skills', 'location']
     def perform_create(self, serializer):
          serializer.save(user=self.request.user)
-         
-    
