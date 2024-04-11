@@ -5,8 +5,8 @@ from django.shortcuts import get_object_or_404, render
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import   ProfileSerializer, SkillSerializer, UserSerializer, UserSkillSerializer
-from .models import   Profile, Skill, UserSkill
+from .serializers import   ProfileSerializer, ReviewSerializer, SkillSerializer, UserSerializer
+from .models import   Profile, Review, Skill
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from .permissions import SkillPermissions
@@ -24,6 +24,11 @@ class SkillView(viewsets.ModelViewSet):
     queryset = Skill.objects.all()
     serializer_class = SkillSerializer
     permission_classes = [SkillPermissions]
+    
+class ReviewView(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class ProfileDetailView(mixins.UpdateModelMixin, 
@@ -33,6 +38,8 @@ class ProfileDetailView(mixins.UpdateModelMixin,
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
     def get_object(self):
         user_profile = self.request.user.profile
@@ -51,14 +58,3 @@ class ProfileDetailView(mixins.UpdateModelMixin,
             return Response(serializer.data)
         except Http404:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        
-class UserSkillslView(mixins.UpdateModelMixin,  
-                        mixins.ListModelMixin,
-                        mixins.CreateModelMixin,
-                        mixins.DestroyModelMixin,
-                        GenericViewSet):
-    queryset = UserSkill.objects.all()
-    serializer_class = UserSkillSerializer
-    permission_classes = [IsAuthenticated]
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)

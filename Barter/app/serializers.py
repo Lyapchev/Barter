@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from rest_framework import serializers
-from .models import Profile, Skill, UserSkill
+from .models import Profile, Review,  Skill
 from django.db.models.signals import post_save
 
 class UserSerializer(serializers.ModelSerializer):
@@ -32,13 +32,7 @@ class UserSerializer(serializers.ModelSerializer):
 class SkillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skill
-        fields = ('id', 'name')
-        
-class UserSkillSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserSkill
-        fields = ['user', 'skill']
-        read_only_fields = ['user']
+        fields = ('id', 'name', 'price')
         
 class UserNameSerializer(serializers.ModelSerializer):
     class Meta:
@@ -48,12 +42,19 @@ class UserNameSerializer(serializers.ModelSerializer):
 class SkillNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skill
-        fields = ['name']
+        fields = '__all__'
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserNameSerializer(read_only=True)
-    skills = SkillNameSerializer(read_only=True)
+    #skills = SkillNameSerializer(many=True, read_only=True)
+
     class Meta:
         model = Profile
         fields = ['user', 'bio', 'location', 'birth_date', 'skills']
         read_only_fields = ['user']
+        
+class ReviewSerializer(serializers.ModelSerializer):
+    #review_user = UserNameSerializer(read_only=True)
+    class Meta:
+        model = Review
+        fields = ['id', 'review_user', 'text']
