@@ -42,19 +42,25 @@ class UserNameSerializer(serializers.ModelSerializer):
 class SkillNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skill
-        fields = '__all__'
+        fields = ('name', 'price')
+        
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['id', 'review_user', 'text']
+        
+class ReviewTextSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['text']
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserNameSerializer(read_only=True)
     #skills = SkillNameSerializer(many=True, read_only=True)
+    reviews = ReviewTextSerializer(many=True, read_only=True)
 
     class Meta:
         model = Profile
-        fields = ['user', 'bio', 'location', 'birth_date', 'skills']
+        fields = ['user', 'bio', 'location', 'birth_date', 'skills', 'reviews']
         read_only_fields = ['user']
         
-class ReviewSerializer(serializers.ModelSerializer):
-    #review_user = UserNameSerializer(read_only=True)
-    class Meta:
-        model = Review
-        fields = ['id', 'review_user', 'text']

@@ -28,7 +28,7 @@ class SkillView(viewsets.ModelViewSet):
 class ReviewView(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [SkillPermissions]
 
 
 class ProfileDetailView(mixins.UpdateModelMixin, 
