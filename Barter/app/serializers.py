@@ -50,9 +50,10 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ['id', 'review_user', 'text']
         
 class ReviewTextSerializer(serializers.ModelSerializer):
+    user = UserNameSerializer(read_only=True)
     class Meta:
         model = Review
-        fields = ['text']
+        fields = ['user', 'text']
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserNameSerializer(read_only=True)
@@ -63,4 +64,3 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ['user', 'bio', 'location', 'birth_date', 'skills', 'reviews']
         read_only_fields = ['user']
-        
