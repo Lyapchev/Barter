@@ -7,6 +7,8 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import IsAuthenticated
 from .permissions import SkillPermissions, IsOwnerOrReadOnly
 from django.contrib.auth.models import User
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 
 class UserCreate(generics.CreateAPIView):
@@ -17,6 +19,8 @@ class SkillView(viewsets.ModelViewSet):
     queryset = Skill.objects.all()
     serializer_class = SkillSerializer
     permission_classes = [SkillPermissions]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name']
 
     
 class ReviewView(viewsets.ModelViewSet):
@@ -33,6 +37,8 @@ class ProfileDetailView(mixins.UpdateModelMixin,
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['skills', 'location']
     def perform_create(self, serializer):
          serializer.save(user=self.request.user)
          
